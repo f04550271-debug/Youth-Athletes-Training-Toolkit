@@ -1,0 +1,226 @@
+<!DOCTYPE html><html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <title>PHV Maturity Calculator</title>
+        <style>
+            /* Import a bold, modern font */
+            @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap');
+
+            * {
+                box-sizing: border-box;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+
+            body {
+                background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 0;
+                padding: 20px;
+            }
+
+            /* Main Card Wrapper */
+            .calculator-card {
+                background: #ffffff;
+                padding: 32px;
+                border-radius: 24px;
+                box-shadow: 0 20px 40px rgba(0, 79, 158, 0.15);
+                width: 100%;
+                max-width: 440px;
+                border: 4px solid #ffffff;
+            }
+
+            /* Header Style */
+            .header-title {
+                font-size: 1.6rem;
+                font-weight: 800;
+                text-align: center;
+                color: #1e293b;
+                margin: 0 0 24px 0;
+                text-transform: uppercase;
+                letter-spacing: -0.5px;
+                background: linear-gradient(90deg, #4facfe, #00f2fe);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            /* Form Element Styling */
+            p {
+                margin: 14px 0 6px 4px;
+                font-weight: 700;
+                color: #475569;
+                font-size: 0.9rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .input, select {
+                width: 100%;
+                padding: 14px 16px;
+                border: 2px solid #e2e8f0;
+                border-radius: 14px;
+                font-size: 1rem;
+                font-weight: 500;
+                color: #0f172a;
+                background-color: #f8fafc;
+                transition: all 0.25s ease;
+                outline: none;
+            }
+
+            .input:focus, select:focus {
+                border-color: #4facfe;
+                background-color: #ffffff;
+                box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.15);
+            }
+
+            /* Energetic CTA Button */
+            button {
+                width: 100%;
+                padding: 16px;
+                background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%);
+                color: #ffffff;
+                border: none;
+                border-radius: 16px;
+                font-size: 1.1rem;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                margin-top: 24px;
+                box-shadow: 0 6px 20px rgba(255, 65, 108, 0.3);
+            }
+
+            button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 24px rgba(255, 65, 108, 0.45);
+            }
+
+            button:active {
+                transform: translateY(1px);
+            }
+
+            /* Display Results Box */
+            .results-container {
+                margin-top: 24px;
+                padding: 18px;
+                background: #f1f5f9;
+                border-radius: 16px;
+                border-left: 6px solid #4facfe;
+            }
+
+            .results-container p {
+                margin: 6px 0;
+                color: #334155;
+                font-size: 0.95rem;
+            }
+
+            /* Dynamic highlight styling for answers */
+            span {
+                display: inline-block;
+                font-weight: 800;
+                color: #0f172a;
+                font-size: 1.05rem;
+                text-transform: none;
+            }
+            
+            #stageResult {
+                color: #ff416c;
+            }
+
+            /* Link Container Style */
+            .link-container {
+                text-align: center;
+                margin-top: 24px;
+            }
+
+            .link-container a {
+                color: #4facfe;
+                text-decoration: none;
+                font-weight: 700;
+                font-size: 0.95rem;
+                transition: color 0.2s ease;
+            }
+
+            .link-container a:hover {
+                color: #ff416c;
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="calculator-card">
+            <h2 class="header-title">⚡ Growth Spurt Tracker</h2>
+            
+            <p>Age (Years)</p>
+            <input type="number" id="Age" class="input" placeholder="e.g. 13">
+            
+            <p>Standing Height (cm)</p>
+            <input type="number" id="StandingHeight" class="input" placeholder="e.g. 160">
+            
+            <p class="text">Sitting Height (cm)</p>
+            <input type="number" id="Sitting-Height" class="input" placeholder="e.g. 82">
+            
+            <p>Weight (kg)</p>
+            <input type="number" id="Weight" class="input" placeholder="e.g. 50">
+            
+            <p class="text">Gender</p>
+            <select id="Gender">
+                <option>Male</option>
+                <option>Female</option>
+            </select>
+            
+            <button onclick="CalculatePHV()">Calculate Maturity</button>
+            
+            <div class="results-container">
+                <p>Maturity Offset: <span id="phvResult">--</span></p>
+                <p>Maturity Stage: <span id="stageResult">--</span></p>
+            </div>
+
+            <div class="link-container">
+                <a href="Exercise Database.html">View Exercise Database</a>
+            </div>
+        </div>
+
+        <script>
+            function CalculatePHV() {
+                var Age = parseFloat(document.getElementById("Age").value);
+                var StandingHeight = parseFloat(document.getElementById("StandingHeight").value);
+                var SittingHeight = parseFloat(document.getElementById("Sitting-Height").value);
+                var Weight = parseFloat(document.getElementById("Weight").value);
+                var Gender = document.getElementById("Gender").value;
+                
+                if(!Age || !StandingHeight || !SittingHeight || !Weight) {
+                    alert("Please fill out all fields!");
+                    return;
+                }
+
+                var LegLength = StandingHeight - SittingHeight;
+                let PHV = 0;
+                let Stage = "";
+
+                if (Gender === "Male") {
+                    PHV = -9.236 + (0.0002708 * LegLength * SittingHeight) + (-0.001663 * Age * LegLength) +
+                          (0.007216 * Age * SittingHeight) + (0.02292 * ((Weight / StandingHeight)*100));
+                } else if (Gender === "Female") {
+                    PHV = -9.376 + (0.0001882 * LegLength * SittingHeight) + (0.0022 * Age * LegLength) + 
+                          (0.005847 * Age * SittingHeight) + (-0.02653 * Age * Weight) + (0.07693 * ((Weight / StandingHeight)*100));
+                }
+                
+                if (PHV < -1) {
+                    Stage = "Pre-PHV (Growth spurt hasn't started)";
+                } else if (PHV >= -1 && PHV <= 1) {
+                    Stage = "Circa-PHV (Right in the middle of growth spurt!)";
+                } else if (PHV > 1) {
+                    Stage = "Post-PHV (Growth spurt completed)";
+                }
+
+                document.getElementById("phvResult").textContent = PHV.toFixed(2) + " years from Peak Growth Velocity";
+                document.getElementById("stageResult").textContent = Stage;
+            }
+        </script>
+    </body></html>

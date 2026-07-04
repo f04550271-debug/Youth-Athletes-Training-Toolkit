@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Performance Resources</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap');
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .resource-card {
+            background: #ffffff;
+            padding: 32px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 79, 158, 0.15);
+            width: 100%;
+            max-width: 500px;
+            border: 4px solid #ffffff;
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-align: center;
+            color: #1e293b;
+            margin: 0 0 8px 0;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin: 0 0 28px 0;
+        }
+
+        .resource-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .download-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            padding: 16px 20px;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .download-item:hover {
+            border-color: #4facfe;
+            background: #f1f5f9;
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .file-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .file-meta {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-download {
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(79, 172, 254, 0.25);
+            transition: all 0.2s ease;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-back {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: #1e293b;
+            color: #ffffff;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background: #0f172a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="resource-card">
+        <h2 class="header-title">⚡ Resource Center</h2>
+        <p class="subtitle">Implementation Material Guides</p>
+        
+        <div class="resource-list">
+            <!-- Program Design Guide Box File Download Target link hook -->
+            <div class="download-item">
+                <div class="item-info">
+                    <span class="file-title">Program Design Guide</span>
+                    <span class="file-meta">PDF Document</span>
+                </div>
+                <a href="Program Design Guide.pdf" download="" class="btn-download">💾 Download</a>
+            </div>
+            
+            <!-- Practical Implementation Guide Box File Download Target link hook -->
+            <div class="download-item">
+                <div class="item-info">
+                    <span class="file-title">Practical Implementation Guide</span>
+                    <span class="file-meta">PDF Document</span>
+                </div>
+                <a href="Practical Implementation Guide.pdf" download class="btn-download">💾 Download</a>
+            </div>
+        </div>
+        
+        <a href="Training Decision Tool.html" class="btn-back">↩️ Back to Advisor</a>
+    </div>
+
+</body>
+</html>

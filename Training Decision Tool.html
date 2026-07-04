@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <title>Training Decision Tool</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=500;700;800&display=swap');
+
+            * {
+                box-sizing: border-box;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+
+            body {
+                background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 0;
+                padding: 20px;
+            }
+
+            .tool-card {
+                background: #ffffff;
+                padding: 32px;
+                border-radius: 24px;
+                box-shadow: 0 20px 40px rgba(0, 79, 158, 0.15);
+                width: 100%;
+                max-width: 480px;
+                border: 4px solid #ffffff;
+            }
+
+            .header-title {
+                font-size: 1.6rem;
+                font-weight: 800;
+                text-align: center;
+                color: #1e293b;
+                margin: 0 0 24px 0;
+                text-transform: uppercase;
+                letter-spacing: -0.5px;
+                background: linear-gradient(90deg, #ff416c, #ff4b2b);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            p {
+                margin: 14px 0 6px 4px;
+                font-weight: 700;
+                color: #475569;
+                font-size: 0.9rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            select {
+                width: 100%;
+                padding: 14px 16px;
+                border: 2px solid #e2e8f0;
+                border-radius: 14px;
+                font-size: 1rem;
+                font-weight: 700;
+                color: #0f172a;
+                background-color: #f8fafc;
+                transition: all 0.25s ease;
+                outline: none;
+                cursor: pointer;
+            }
+
+            select:focus {
+                border-color: #4facfe;
+                background-color: #ffffff;
+                box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.15);
+            }
+
+            button {
+                width: 100%;
+                padding: 16px;
+                background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+                color: #ffffff;
+                border: none;
+                border-radius: 16px;
+                font-size: 1.1rem;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                margin-top: 24px;
+                box-shadow: 0 6px 20px rgba(79, 172, 254, 0.3);
+            }
+
+            button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 24px rgba(79, 172, 254, 0.45);
+            }
+
+            /* Bottom Navigation Link Grid */
+            .nav-row {
+                display: flex;
+                gap: 12px;
+                margin-top: 16px;
+            }
+
+            .nav-link {
+                display: block;
+                text-align: center;
+                text-decoration: none;
+                background: #1e293b;
+                color: #ffffff;
+                font-size: 0.9rem;
+                font-weight: 800;
+                text-transform: uppercase;
+                padding: 14px;
+                border-radius: 16px;
+                flex: 1;
+                transition: all 0.2s ease;
+            }
+
+            .nav-link:hover {
+                background: #0f172a;
+                box-shadow: 0 6px 16px rgba(30, 41, 59, 0.2);
+            }
+
+            .advice-container {
+                margin-top: 24px;
+                display: none;
+                background: #f8fafc;
+                padding: 20px;
+                border-radius: 16px;
+                border-left: 6px solid #ff416c;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .info-item {
+                font-size: 1rem;
+                color: #334155;
+                line-height: 1.4;
+            }
+
+            .info-item strong {
+                font-weight: 800;
+                color: #0f172a;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="tool-card">
+            <h2 class="header-title">⚡ Training Decision Tool</h2>
+            
+            <p>Maturity Stage</p>
+            <select id="maturityStage">
+                <option value="Pre-PHV">Pre-PHV</option>
+                <option value="Circa-PHV">Circa-PHV</option>
+                <option value="Post-PHV">Post-PHV</option>
+            </select>
+            
+            <p>Training Experience</p>
+            <select id="trainingExperience">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+            </select>
+            
+            <p>Training Goal</p>
+            <select id="trainingGoal">
+                <option value="Strength">Strength</option>
+                <option value="Power">Power</option>
+                <option value="Muscle">Hypertrophy (Muscle)</option>
+            </select>
+            
+            <button onclick="generateAdvice()">Get Training Advice</button>
+            
+            <div class="advice-container" id="adviceContainer"></div>
+
+            <!-- Double Bottom Anchor Navigation Row -->
+            <div class="nav-row">
+                <a href="Exercise Database.html" class="nav-link">🏋️ Database</a>
+                <a href="Resources.html" class="nav-link">📂 Resources</a>
+            </div>
+        </div>
+
+        <script>
+            function generateAdvice() {
+                const stage = document.getElementById("maturityStage").value;
+                const goal = document.getElementById("trainingGoal").value;
+                
+                let weeklySets = "";
+                let repsText = "";
+                let intensityText = "";
+                let movementsText = "";
+                let emphasisText = "";
+
+                if (goal === "Strength") {
+                    repsText = "3 to 5";
+                } else if (goal === "Muscle") {
+                    repsText = "8 to 10";
+                } else if (goal === "Power") {
+                    repsText = "2 to 4";
+                }
+
+                if (stage === "Pre-PHV") {
+                    weeklySets = "8 to 12";
+                    intensityText = (goal === "Power") ? "50 to 70% (move weight fast)" : "50 to 70% and RPE 3 to 5";
+                    movementsText = "basic movements";
+                    emphasisText = "movement competency / motor learning and coordination";
+                } else if (stage === "Circa-PHV") {
+                    weeklySets = "12 to 14";
+                    intensityText = (goal === "Power") ? "50 to 70% (move weight fast)" : "60 to 75% and RPE 4 to 6";
+                    movementsText = "basic to intermediate movements";
+                    emphasisText = "re-establishing movement quality and coordination";
+                } else if (stage === "Post-PHV") {
+                    weeklySets = "12 to 24 sets";
+                    intensityText = (goal === "Power") ? "50 to 70% (move weight fast)" : "70 to 90% and RPE 7 to 10";
+                    movementsText = "intermediate to advanced movements";
+                    emphasisText = "maximum strength and power while maintaining good movement quality";
+                }
+
+                let containerHtml = `
+                    <div class="info-item"><strong>Weekly sets:</strong> ${weeklySets}</div>
+                    <div class="info-item"><strong>Reps (for strength exercises):</strong> ${repsText}</div>
+                    <div class="info-item"><strong>Intensity:</strong> ${intensityText}</div>
+                    <div class="info-item"><strong>Movements:</strong> ${movementsText}</div>
+                    <div class="info-item"><strong>Emphasis:</strong> ${emphasisText}</div>
+                `;
+
+                const outputBox = document.getElementById("adviceContainer");
+                outputBox.innerHTML = containerHtml;
+                outputBox.style.display = "flex";
+            }
+        </script>
+    </body>
+</html>

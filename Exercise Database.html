@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Performance Library</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap');
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 24px;
+            color: #0f172a;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-header {
+            text-align: center;
+            margin-bottom: 20px;
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 79, 158, 0.1);
+        }
+
+        .main-header h1 {
+            margin: 0 0 8px 0;
+            font-weight: 800;
+            font-size: 2.2rem;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .main-header p {
+            margin: 0;
+            color: #64748b;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation Header Bar Style Configuration */
+        .nav-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            text-align: center;
+            text-decoration: none;
+            background: #1e293b;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 12px 24px;
+            border-radius: 14px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(30, 41, 59, 0.15);
+        }
+
+        .nav-link:hover {
+            background: #0f172a;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(30, 41, 59, 0.25);
+        }
+
+        .filter-panel {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: 0 20px 40px rgba(0, 79, 158, 0.1);
+            border: 4px solid #ffffff;
+        }
+
+        .panel-title {
+            margin: 0 0 20px 0;
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #1e293b;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        /* Hiding filter columns completely if category doesn't utilize them */
+        .filter-group.hidden {
+            display: none !important;
+        }
+
+        .filter-group label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #0f172a;
+            background-color: #f8fafc;
+            outline: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: #ff416c;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(255, 65, 108, 0.15);
+        }
+
+        .results-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+            padding: 0 8px;
+        }
+
+        .counter-badge {
+            background: #1e293b;
+            color: #ffffff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0, 79, 158, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 79, 158, 0.12);
+            border-color: #4facfe;
+        }
+
+        .card-id {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: #cbd5e1;
+            background: #f8fafc;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0 0 14px 0;
+            padding-right: 35px;
+            line-height: 1.3;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 8px;
+            text-transform: uppercase;
+        }
+
+        .tag-cat { background: rgba(79, 172, 254, 0.12); color: #0284c7; }
+        .tag-stage { background: rgba(255, 65, 108, 0.1); color: #db2777; }
+        .tag-diff { background: #f1f5f9; color: #475569; }
+
+        .meta-specs {
+            border-top: 1px solid #f1f5f9;
+            padding-top: 12px;
+            margin-top: auto;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+        }
+
+        .spec-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .spec-label {
+            color: #94a3b8;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .spec-value {
+            color: #334155;
+            font-weight: 800;
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            padding: 60px;
+            text-align: center;
+            font-weight: 700;
+            color: #475569;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="main-header">
+        <h1>⚡ Performance Library</h1>
+        <p>Athletic Development Database</p>
+    </header>
+
+    <!-- Cross Navigation Control Links Framework -->
+    <div class="nav-row">
+        <a href="index.html" class="nav-link">📊 PHV Calculator</a>
+        <a href="Training Decision Tool.html" class="nav-link">⚡ Training Decision Tool</a>
+    </div>
+
+    <section class="filter-panel">
+        <h2 class="panel-title">🎛️ Filter Toolkit</h2>
+        <div class="filter-grid">
+            <div class="filter-group">
+                <label for="filterCategory">Category</label>
+                <select id="filterCategory" class="filter-select" onchange="onCategoryChange()">
+                    <option value="all">All Categories</option>
+                    <option value="Squat/Lunge">Squat / Lunge</option>
+                    <option value="Hip Hinge">Hip Hinge</option>
+                    <option value="Upper Body Push">Upper Body Push</option>
+                    <option value="Upper Body Pull">Upper Body Pull</option>
+                    <option value="True Plyometric">True Plyometric</option>
+                    <option value="Upper Body Power">Upper Body Power</option>
+                    <option value="Power">Power</option>
+                    <option value="Core Movements">Core Movements</option>
+                    <option value="Accessories">Accessories</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="filterDifficulty">Difficulty</label>
+                <select id="filterDifficulty" class="filter-select" onchange="applyFilters()">
+                    <option value="all">All Difficulties</option>
+                    <option value="Foundational">Foundational</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="filterStage">PHV Stage</label>
+                <select id="filterStage" class="filter-select" onchange="applyFilters()">
+                    <option value="all">All</option>
+                    <option value="Pre">Pre</option>
+                    <option value="Circa">Circa</option>
+                    <option value="Post">Post</option>
+                </select>
+            </div>
+
+            <div class="filter-group" id="grpUnilateral">
+                <label for="filterUnilateral">Unilateral</label>
+                <select id="filterUnilateral" class="filter-select" onchange="applyFilters()">
+                    <option value="all">All</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+
+            <div class="filter-group" id="grpDirection">
+                <label for="filterDirection">Movement Direction</label>
+                <select id="filterDirection" class="filter-select" onchange="applyFilters()">
+                    <option value="all">All Directions</option>
+                    <option value="Horizontal">Horizontal</option>
+                    <option value="Vertical">Vertical</option>
+                    <option value="Lateral">Lateral</option>
+                </select>
+            </div>
+
+            <div class="filter-group" id="grpPattern">
+                <label for="filterPattern">Movement Pattern</label>
+                <select id="filterPattern" class="filter-select" onchange="applyFilters()">
+                    <option value="all">All Patterns</option>
+                    <option value="Flexion/Extension">Flexion / Extension</option>
+                    <option value="Lateral Flexion">Lateral Flexion</option>
+                    <option value="Rotation">Rotation</option>
+                </select>
+            </div>
+
+            <div class="filter-group" id="grpTarget">
+                <label for="filterTarget">Target Area</label>
+                <select id="filterTarget" class="filter-select" onchange="applyFilters()">
+                    <option value="all">All Target Areas</option>
+                    <option value="Rotator Cuff">Rotator Cuff</option>
+                    <option value="Lower Traps">Lower Traps</option>
+                    <option value="Mid Traps">Mid Traps</option>
+                    <option value="Calves">Calves</option>
+                    <option value="Shins">Shins</option>
+                    <option value="Hip Adductors">Hip Adductors</option>
+                    <option value="Glute Medius/Abductors">Glute Medius/Abductors</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <div class="results-bar">
+        <div class="counter-badge" id="countDisplay">Showing 79 exercises</div>
+    </div>
+
+    <main class="exercise-grid" id="exerciseContainer"></main>
+</div>
+
+<script>
+    const exerciseDataset = [
+        { id: 1, exercise: "Squat to Box", category: "Squat/Lunge", stage: "Pre/Circa", equipment: "Box", difficulty: "Foundational", unilateral: "No" },
+        { id: 2, exercise: "Goblet Squat", category: "Squat/Lunge", stage: "Pre/Circa", equipment: "DB/KB", difficulty: "Foundational", unilateral: "No" },
+        { id: 3, exercise: "Front Squat", category: "Squat/Lunge", stage: "All", equipment: "Barbell", difficulty: "Intermediate", unilateral: "No" },
+        { id: 4, exercise: "Back Squat", category: "Squat/Lunge", stage: "Post", equipment: "Barbell", difficulty: "Intermediate", unilateral: "No" },
+        { id: 5, exercise: "Box Squat", category: "Squat/Lunge", stage: "Post", equipment: "Barbell", difficulty: "Intermediate", unilateral: "No" },
+        { id: 6, exercise: "Split Squat", category: "Squat/Lunge", stage: "All", equipment: "BW/DB", difficulty: "Foundational", unilateral: "Yes" },
+        { id: 7, exercise: "Bulgarian Split Squat", category: "Squat/Lunge", stage: "Post", equipment: "DB/BB", difficulty: "Advanced", unilateral: "Yes" },
+        { id: 8, exercise: "Forward Lunge", category: "Squat/Lunge", stage: "All", equipment: "BW/DB", difficulty: "Foundational", unilateral: "Yes" },
+        { id: 9, exercise: "Reverse Lunge", category: "Squat/Lunge", stage: "All", equipment: "BW/DB", difficulty: "Foundational", unilateral: "Yes" },
+        { id: 10, exercise: "Walking Lunge", category: "Squat/Lunge", stage: "Post", equipment: "DB", difficulty: "Intermediate", unilateral: "Yes" },
+        { id: 11, exercise: "Step-Up", category: "Squat/Lunge", stage: "All", equipment: "Box/DB", difficulty: "Intermediate", unilateral: "Yes" },
+        { id: 12, exercise: "Lateral Lunge", category: "Squat/Lunge", stage: "All", equipment: "DB", difficulty: "Intermediate", unilateral: "Yes" },
+        
+        { id: 13, exercise: "Glute Bridge", category: "Hip Hinge", stage: "Pre", equipment: "BW", difficulty: "Foundational", unilateral: "No" },
+        { id: 14, exercise: "Hip Thrust", category: "Hip Hinge", stage: "All", equipment: "Barbell", difficulty: "Intermediate", unilateral: "No" },
+        { id: 15, exercise: "Romanian Deadlift", category: "Hip Hinge", stage: "All", equipment: "BB/DB", difficulty: "Intermediate", unilateral: "No" },
+        { id: 16, exercise: "Trap Bar Deadlift", category: "Hip Hinge", stage: "Post", equipment: "Trap Bar", difficulty: "Intermediate", unilateral: "No" },
+        { id: 17, exercise: "Conventional Deadlift", category: "Hip Hinge", stage: "Post", equipment: "Barbell", difficulty: "Advanced", unilateral: "No" },
+        { id: 18, exercise: "Single-leg Romanian Deadlift", category: "Hip Hinge", stage: "Post", equipment: "DB", difficulty: "Advanced", unilateral: "Yes" },
+        { id: 19, exercise: "Good Morning", category: "Hip Hinge", stage: "Post", equipment: "Barbell", difficulty: "Advanced", unilateral: "No" },
+        
+        { id: 20, exercise: "Push-up", category: "Upper Body Push", direction: "Horizontal", stage: "All", equipment: "BW", difficulty: "Foundational", unilateral: "No" },
+        { id: 21, exercise: "Feet Elevated Push-up", category: "Upper Body Push", direction: "Horizontal", stage: "Post", equipment: "BW", difficulty: "Intermediate", unilateral: "No" },
+        { id: 22, exercise: "DB Bench Press", category: "Upper Body Push", direction: "Horizontal", stage: "All", equipment: "DB", difficulty: "Intermediate", unilateral: "No" },
+        { id: 23, exercise: "Barbell Bench Press", category: "Upper Body Push", direction: "Horizontal", stage: "Post", equipment: "BB", difficulty: "Intermediate", unilateral: "No" },
+        { id: 24, exercise: "Incline DB Press", category: "Upper Body Push", direction: "Horizontal", stage: "Post", equipment: "DB", difficulty: "Intermediate", unilateral: "No" },
+        { id: 25, exercise: "Standing DB Overhead Press", category: "Upper Body Push", direction: "Vertical", stage: "All", equipment: "DB", difficulty: "Intermediate", unilateral: "No" },
+        { id: 26, exercise: "Landmine Press", category: "Upper Body Push", direction: "Vertical", stage: "All", equipment: "Landmine", difficulty: "Intermediate", unilateral: "No" },
+        { id: 27, exercise: "Single-arm DB Press", category: "Upper Body Push", direction: "Vertical", stage: "Post", equipment: "DB", difficulty: "Advanced", unilateral: "Yes" },
+        
+        { id: 28, exercise: "Inverted Row", category: "Upper Body Pull", direction: "Horizontal", stage: "All", equipment: "Bar", difficulty: "Foundational", unilateral: "No" },
+        { id: 29, exercise: "Single-arm DB Row", category: "Upper Body Pull", direction: "Horizontal", stage: "All", equipment: "DB", difficulty: "Intermediate", unilateral: "Yes" },
+        { id: 30, exercise: "Bent-over Row", category: "Upper Body Pull", direction: "Horizontal", stage: "Post", equipment: "Barbell", difficulty: "Intermediate", unilateral: "No" },
+        { id: 31, exercise: "Pull-up", category: "Upper Body Pull", direction: "Vertical", stage: "Post", equipment: "Pull-up Bar", difficulty: "Advanced", unilateral: "No" },
+        { id: 32, exercise: "Chin-up", category: "Upper Body Pull", direction: "Vertical", stage: "Post", equipment: "Pull-up Bar", difficulty: "Advanced", unilateral: "No" },
+        
+        { id: 33, exercise: "Pogo Hops", category: "True Plyometric", stage: "All", equipment: "Bodyweight", difficulty: "Foundational" },
+        { id: 34, exercise: "Single-leg Pogo Hop", category: "True Plyometric", stage: "Post", equipment: "Bodyweight", difficulty: "Intermediate" },
+        { id: 35, exercise: "Alternating Single-leg Pogo Hop", category: "True Plyometric", stage: "Post", equipment: "Bodyweight", difficulty: "Intermediate" },
+        { id: 36, exercise: "Drop Jump", category: "True Plyometric", stage: "Post", equipment: "Box", difficulty: "Advanced" },
+        { id: 37, exercise: "Depth Jump", category: "True Plyometric", stage: "Post", equipment: "Box", difficulty: "Advanced" },
+        { id: 38, exercise: "Depth Drop to Broad Jump", category: "True Plyometric", stage: "Post", equipment: "Box", difficulty: "Advanced" },
+        { id: 39, exercise: "Depth Drop to Vertical Jump", category: "True Plyometric", stage: "Post", equipment: "Box", difficulty: "Advanced" },
+        
+        { id: 40, exercise: "Medicine Ball Chest Pass", category: "Upper Body Power", stage: "All", equipment: "Medicine Ball", difficulty: "Foundational" },
+        { id: 41, exercise: "Medicine Ball Overhead Throw", category: "Upper Body Power", stage: "All", equipment: "Medicine Ball", difficulty: "Intermediate" },
+        { id: 42, exercise: "Medicine Ball Slam", category: "Upper Body Power", stage: "All", equipment: "Medicine Ball", difficulty: "Intermediate" },
+        { id: 43, exercise: "Rotational Medicine Ball Throw", category: "Upper Body Power", stage: "All", equipment: "Medicine Ball", difficulty: "Intermediate" },
+        { id: 44, exercise: "Shot Put Medicine Ball Throw", category: "Upper Body Power", stage: "All", equipment: "Medicine Ball", difficulty: "Intermediate" },
+        { id: 45, exercise: "Landmine Rotation", category: "Upper Body Power", stage: "All", equipment: "Landmine", difficulty: "Intermediate" },
+        { id: 46, exercise: "Medicine Ball Overhead Backward Throw", category: "Upper Body Power", stage: "All", equipment: "Medicine Ball", difficulty: "Intermediate" },
+        
+        { id: 47, exercise: "Countermovement Jump", category: "Power", direction: "Vertical", stage: "All", equipment: "Bodyweight", difficulty: "Foundational" },
+        { id: 48, exercise: "Squat Jump", category: "Power", direction: "Vertical", stage: "All", equipment: "Bodyweight", difficulty: "Foundational" },
+        { id: 49, exercise: "Loaded Squat Jump", category: "Power", direction: "Vertical", stage: "Post", equipment: "DB/BB", difficulty: "Intermediate" },
+        { id: 50, exercise: "Broad Jump", category: "Power", direction: "Horizontal", stage: "All", equipment: "Bodyweight", difficulty: "Foundational" },
+        { id: 51, exercise: "Single-leg Vertical Jump", category: "Power", direction: "Vertical", stage: "Post", equipment: "Bodyweight", difficulty: "Intermediate" },
+        { id: 52, exercise: "Single-leg Broad Jump", category: "Power", direction: "Horizontal", stage: "Post", equipment: "Bodyweight", difficulty: "Intermediate" },
+        { id: 53, exercise: "Lateral Single-leg Jump", category: "Power", direction: "Lateral", stage: "Post", equipment: "Bodyweight", difficulty: "Intermediate" },
+        { id: 54, exercise: "Loaded Broad Jump", category: "Power", direction: "Horizontal", stage: "Post", equipment: "DB", difficulty: "Intermediate" },
+        { id: 55, exercise: "Hang Power Clean", category: "Power", direction: "Vertical", stage: "Post", equipment: "Barbell", difficulty: "Advanced" },
+        { id: 56, exercise: "Power Clean", category: "Power", direction: "Vertical", stage: "Post", equipment: "Barbell", difficulty: "Advanced" },
+        
+        { id: 57, exercise: "Plank", category: "Core Movements", movementPattern: "Flexion/Extension", staticDynamic: "Static", stage: "All", equipment: "Bodyweight", difficulty: "Foundational" },
+        { id: 58, exercise: "Dead Bug", category: "Core Movements", movementPattern: "Flexion/Extension", staticDynamic: "Dynamic", stage: "All", equipment: "Bodyweight", difficulty: "Foundational" },
+        { id: 59, exercise: "Loaded Crunch", category: "Core Movements", movementPattern: "Flexion/Extension", staticDynamic: "Dynamic", stage: "All", equipment: "Plate/Cable", difficulty: "Intermediate" },
+        { id: 60, exercise: "Hanging Leg Raise", category: "Core Movements", movementPattern: "Flexion/Extension", staticDynamic: "Dynamic", stage: "Post", equipment: "Pull-up Bar", difficulty: "Intermediate" },
+        { id: 61, exercise: "Ab Wheel Rollout", category: "Core Movements", movementPattern: "Flexion/Extension", staticDynamic: "Dynamic", stage: "Post", equipment: "Ab Wheel", difficulty: "Advanced" },
+        { id: 62, exercise: "Side Plank", category: "Core Movements", movementPattern: "Lateral Flexion", staticDynamic: "Static", stage: "All", equipment: "Bodyweight", difficulty: "Foundational" },
+        { id: 63, exercise: "Side Plank Reach", category: "Core Movements", movementPattern: "Lateral Flexion", staticDynamic: "Dynamic", stage: "Post", equipment: "Bodyweight", difficulty: "Intermediate" },
+        { id: 64, exercise: "Copenhagen Plank", category: "Core Movements", movementPattern: "Lateral Flexion", staticDynamic: "Static", stage: "Post", equipment: "Bodyweight", difficulty: "Advanced" },
+        { id: 65, exercise: "GHD Side Bend", category: "Core Movements", movementPattern: "Lateral Flexion", staticDynamic: "Dynamic", stage: "Post", equipment: "GHD", difficulty: "Advanced" },
+        { id: 66, exercise: "Pallof Press", category: "Core Movements", movementPattern: "Rotation", staticDynamic: "Static", stage: "All", equipment: "Cable/Band", difficulty: "Intermediate" },
+        { id: 67, exercise: "Cable Rotation", category: "Core Movements", movementPattern: "Rotation", staticDynamic: "Dynamic", stage: "All", equipment: "Cable", difficulty: "Intermediate" },
+        { id: 68, exercise: "Cable Wood Chop", category: "Core Movements", movementPattern: "Rotation", staticDynamic: "Dynamic", stage: "Post", equipment: "Cable", difficulty: "Intermediate" },
+        { id: 69, exercise: "Russian Twist", category: "Core Movements", movementPattern: "Rotation", staticDynamic: "Dynamic", stage: "All", equipment: "Medicine Ball", difficulty: "Intermediate" },
+        { id: 70, exercise: "Landmine Rotation (Core)", category: "Core Movements", movementPattern: "Rotation", staticDynamic: "Dynamic", stage: "Post", equipment: "Landmine", difficulty: "Intermediate" },
+        
+        { id: 71, exercise: "External Shoulder Rotation", category: "Accessories", targetArea: "Rotator Cuff", stage: "All", equipment: "Band/DB/Cable", difficulty: "Foundational" },
+        { id: 72, exercise: "Internal Shoulder Rotation", category: "Accessories", targetArea: "Rotator Cuff", stage: "All", equipment: "Band/Cable", difficulty: "Foundational" },
+        { id: 73, exercise: "Prone Y Raise", category: "Accessories", targetArea: "Lower Traps", stage: "All", equipment: "Dumbbells", difficulty: "Intermediate" },
+        { id: 74, exercise: "Prone T Raise", category: "Accessories", targetArea: "Mid Traps", stage: "All", equipment: "Dumbbells", difficulty: "Intermediate" },
+        { id: 75, exercise: "Standing Calf Raise", category: "Accessories", targetArea: "Calves", stage: "All", equipment: "Bodyweight/Machine", difficulty: "Foundational" },
+        { id: 76, exercise: "Seated Calf Raise", category: "Accessories", targetArea: "Calves", stage: "All", equipment: "Machine", difficulty: "Intermediate" },
+        { id: 77, exercise: "Tibialis Raise", category: "Accessories", targetArea: "Shins", stage: "All", equipment: "Bodyweight/Machine", difficulty: "Foundational" },
+        { id: 78, exercise: "Hip Adduction", category: "Accessories", targetArea: "Hip Adductors", stage: "All", equipment: "Cable/Machine", difficulty: "Intermediate" },
+        { id: 79, exercise: "Hip Abduction", category: "Accessories", targetArea: "Glute Medius/Abductors", stage: "All", equipment: "Cable/Machine", difficulty: "Intermediate" }
+    ];
+
+    function displayCards(data) {
+        const container = document.getElementById("exerciseContainer");
+        container.innerHTML = "";
+
+        if (data.length === 0) {
+            container.innerHTML = `<div class="no-results">🚫 No movements match the selected filters.</div>`;
+            document.getElementById("countDisplay").textContent = "Showing 0 exercises";
+            return;
+        }
+
+        document.getElementById("countDisplay").textContent = `Showing ${data.length} exercise${data.length > 1 ? 's' : ''}`;
+
+        data.forEach(ex => {
+            const card = document.createElement("div");
+            card.className = "card";
+
+            // Dynamically construct properties list to ensure non-existent properties are hidden
+            let specsHTML = `
+                <div class="spec-item">
+                    <span class="spec-label">Equipment:</span>
+                    <span class="spec-value">${ex.equipment}</span>
+                </div>
+            `;
+
+            if (ex.unilateral !== undefined) {
+                specsHTML += `
+                    <div class="spec-item">
+                        <span class="spec-label">Unilateral:</span>
+                        <span class="spec-value">${ex.unilateral}</span>
+                    </div>
+                `;
+            }
+            if (ex.direction !== undefined) {
+                specsHTML += `
+                    <div class="spec-item">
+                        <span class="spec-label">Direction:</span>
+                        <span class="spec-value">${ex.direction}</span>
+                    </div>
+                `;
+            }
+            if (ex.movementPattern !== undefined) {
+                specsHTML += `
+                    <div class="spec-item">
+                        <span class="spec-label">Pattern:</span>
+                        <span class="spec-value">${ex.movementPattern}</span>
+                    </div>
+                `;
+            }
+            if (ex.targetArea !== undefined) {
+                specsHTML += `
+                    <div class="spec-item">
+                        <span class="spec-label">Target Area:</span>
+                        <span class="spec-value">${ex.targetArea}</span>
+                    </div>
+                `;
+            }
+
+            card.innerHTML = `
+                <div class="card-id">#${ex.id}</div>
+                <div>
+                    <h3 class="card-title">${ex.exercise}</h3>
+                    <div class="tag-list">
+                        <span class="tag tag-cat">${ex.category}</span>
+                        <span class="tag tag-stage">${ex.stage} PHV</span>
+                        <span class="tag tag-diff">${ex.difficulty}</span>
+                    </div>
+                </div>
+                <div class="meta-specs">
+                    ${specsHTML}
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function onCategoryChange() {
+        const catVal = document.getElementById("filterCategory").value;
+        
+        // Dynamic visibility toggles for the filter bars
+        document.getElementById("grpUnilateral").classList.toggle("hidden", !["all", "Squat/Lunge", "Hip Hinge", "Upper Body Push", "Upper Body Pull"].includes(catVal));
+        document.getElementById("grpDirection").classList.toggle("hidden", !["all", "Upper Body Push", "Upper Body Pull", "Power"].includes(catVal));
+        document.getElementById("grpPattern").classList.toggle("hidden", !["all", "Core Movements"].includes(catVal));
+        document.getElementById("grpTarget").classList.toggle("hidden", !["all", "Accessories"].includes(catVal));
+
+        // Reset subfilters when hiding them so they do not trap matching items behind closed boxes
+        if (catVal !== "all") {
+            if (!["Squat/Lunge", "Hip Hinge", "Upper Body Push", "Upper Body Pull"].includes(catVal)) document.getElementById("filterUnilateral").value = "all";
+            if (!["Upper Body Push", "Upper Body Pull", "Power"].includes(catVal)) document.getElementById("filterDirection").value = "all";
+            if (catVal !== "Core Movements") document.getElementById("filterPattern").value = "all";
+            if (catVal !== "Accessories") document.getElementById("filterTarget").value = "all";
+        }
+
+        applyFilters();
+    }
+
+    function applyFilters() {
+        const catVal = document.getElementById("filterCategory").value;
+        const diffVal = document.getElementById("filterDifficulty").value;
+        const stageVal = document.getElementById("filterStage").value;
+        const uniVal = document.getElementById("filterUnilateral").value;
+        const dirVal = document.getElementById("filterDirection").value;
+        const patVal = document.getElementById("filterPattern").value;
+        const targetVal = document.getElementById("filterTarget").value;
+
+        const filtered = exerciseDataset.filter(ex => {
+            if (catVal !== "all" && ex.category !== catVal) return false;
+            if (diffVal !== "all" && ex.difficulty !== diffVal) return false;
+            
+            // Cleaned strict verification logic for PHV stage values
+            if (stageVal !== "all") {
+                if (stageVal === "Pre" && !ex.stage.includes("Pre") && ex.stage !== "All") return false;
+                if (stageVal === "Circa" && !ex.stage.includes("Circa") && ex.stage !== "All") return false;
+                if (stageVal === "Post" && !ex.stage.includes("Post") && ex.stage !== "All") return false;
+            }
+            
+            // Clean target dropdown filter evaluations
+            if (!document.getElementById("grpUnilateral").classList.contains("hidden") && uniVal !== "all" && ex.unilateral !== uniVal) return false;
+            if (!document.getElementById("grpDirection").classList.contains("hidden") && dirVal !== "all" && ex.direction !== dirVal) return false;
+            if (!document.getElementById("grpPattern").classList.contains("hidden") && patVal !== "all" && ex.movementPattern !== patVal) return false;
+            if (!document.getElementById("grpTarget").classList.contains("hidden") && targetVal !== "all" && ex.targetArea !== targetVal) return false;
+
+            return true;
+        });
+
+        displayCards(filtered);
+    }
+
+    // App Initialization
+    displayCards(exerciseDataset);
+</script>
+</body>
+</html>
